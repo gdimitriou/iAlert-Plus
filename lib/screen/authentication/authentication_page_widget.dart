@@ -6,6 +6,7 @@ import '/flutter_flow/flutter_flow_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_animate/flutter_animate.dart';
 import 'authentication_page_model.dart';
+import '../../service/authentication_service.dart';
 export 'authentication_page_model.dart';
 
 class AuthenticationPageWidget extends StatefulWidget {
@@ -23,6 +24,8 @@ class _AuthenticationPageWidgetState extends State<AuthenticationPageWidget>
   final scaffoldKey = GlobalKey<ScaffoldState>();
 
   final animationsMap = <String, AnimationInfo>{};
+
+  final AuthService _authService = AuthService();
 
   @override
   void initState() {
@@ -125,6 +128,25 @@ class _AuthenticationPageWidgetState extends State<AuthenticationPageWidget>
     _model.dispose();
 
     super.dispose();
+  }
+
+  LoginModel createLoginModel() {
+    return LoginModel(
+      email: _model.emailAddressTextController?.text ?? '',
+      password: _model.passwordTextController?.text ?? '',
+    );
+  }
+
+  void _onLoginButtonPressed() async {
+    final loginModel = createLoginModel();
+    final success = await _authService.login(loginModel);
+    if (success) {
+      // Handle successful login
+      print('Login successful');
+    } else {
+      // Handle failed login
+      print('Login failed');
+    }
   }
 
   @override
@@ -1078,9 +1100,7 @@ class _AuthenticationPageWidgetState extends State<AuthenticationPageWidget>
                                                     .fromSTEB(
                                                         0.0, 0.0, 0.0, 16.0),
                                                 child: FFButtonWidget(
-                                                  onPressed: () {
-                                                    print('Button pressed ...');
-                                                  },
+                                                  onPressed: _onLoginButtonPressed,
                                                   text: 'Sign In',
                                                   options: FFButtonOptions(
                                                     width: 230.0,
